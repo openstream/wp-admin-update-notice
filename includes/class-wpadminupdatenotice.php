@@ -69,11 +69,12 @@ class Wpadminupdatenotice {
 	public function __construct() {
 
 		$this->plugin_name = 'wpadminupdatenotice';
-		$this->version = '1.0.0';
+		$this->version = '1.1.0';
 
 		$this->load_dependencies();
 		$this->set_locale();
 		$this->define_admin_hooks();
+		$this->define_public_hooks();
 	}
 
 	/**
@@ -126,9 +127,9 @@ class Wpadminupdatenotice {
 	 */
 	private function set_locale() {
 
-		$plugin_i18n = new Wpadminupdatenotice_i18n();
+		$wpaun_i18n = new Wpadminupdatenotice_i18n();
 
-		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
+		$this->loader->add_action( 'plugins_loaded', $wpaun_i18n, 'load_plugin_textdomain' );
 
 	}
 
@@ -141,25 +142,52 @@ class Wpadminupdatenotice {
 	 */
 	private function define_admin_hooks() {
 
-		$plugin_admin = new Wpadminupdatenotice_Admin( $this->get_plugin_name(), $this->get_version() );
+		$wpaun_admin = new Wpadminupdatenotice_Admin( $this->get_plugin_name(), $this->get_version() );
 
-		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
-		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
+		$this->loader->add_action( 'admin_enqueue_scripts', $wpaun_admin, 'enqueue_styles' );
+		$this->loader->add_action( 'admin_enqueue_scripts', $wpaun_admin, 'enqueue_scripts' );
 		
-        if (is_admin()) $plugin_admin->addMenu(); // add item to admin menu
+        if (is_admin()) $wpaun_admin->addMenu(); // add item to admin menu
+				
+	}
+
+	/**
+	 * Register all of the hooks related to the public area functionality
+	 * of the plugin.
+	 *
+	 * @since    1.0.5
+	 * @access   private
+	 */
+	private function define_public_hooks() {
 
 		// set email variables
-		$options = ( get_option( 'wpaun' ) );
 		add_filter('auto_core_update_email', function($email, $type, $core_update, $result)
 		{
+			$options = get_option( 'wpaun' );
+			
+			// possible values for $type (success, fail, critical)
 			if ('success' === $type)
 			{
 				if(isset($options['email_subject_success'])) $email['subject'] = $options['email_subject_success'];
+				$email['subject'] = replace_substitions($email['subject']);
 				if(isset($options['email_body_success'])) $email['body'] = $options['email_body_success'] . "\n\n";
+				$email['body'] = replace_substitions($email['body']);
+			} elseif ('fail' === $type) {
+			} elseif ('critical' === $type) {
 			}
 			return $email;
 		}, PHP_INT_MAX, 4);
-		
+
+		/**
+		 * @since    1.1.0
+		 */
+		function replace_substitions($text) {
+			if ($text) {
+				$text = str_replace('${DOM}',parse_url(get_bloginfo( 'url' ), PHP_URL_HOST),$text);
+				$text = str_replace('${VER}',get_bloginfo( 'version' ),$text);
+			}
+			return $text;
+		}
 	}
 
 	/**

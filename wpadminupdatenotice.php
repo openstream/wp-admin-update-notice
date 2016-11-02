@@ -16,8 +16,8 @@
  * Plugin Name:       WP Admin Update Notice
  * Plugin URI:        www.openstream.ch
  * Description:       This Plugin allows you to modify the text which will be send by WordPress after an auto update.
- * Version:           1.0.0
- * Author:            Sandro Lucifora
+ * Version:           1.1.0
+ * Author:            Openstream Internet Solutions
  * Author URI:        http://www.openstream.ch
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
@@ -71,8 +71,8 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-wpadminupdatenotice.php';
  */
 function run_wpadminupdatenotice() {
 
-	$plugin = new Wpadminupdatenotice();
-	$plugin->run();
+	$wpaun = new Wpadminupdatenotice();
+	$wpaun->run();
 
 }
 run_wpadminupdatenotice();

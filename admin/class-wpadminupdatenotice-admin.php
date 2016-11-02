@@ -165,7 +165,12 @@ class Wpadminupdatenotice_Admin {
      */
     public function print_success_info()
     {
-        print __('Enter the plain email text you will get as the admin success notice (no HTML):', 'wpadminupdatenotice');
+        print __('<p>'.'Enter the plain email text you will get as the admin success notice (no HTML).'.'</p>', 'wpadminupdatenotice');
+		// since 1.1.0
+        print __('<p>'.'The following substitions can be used in the message body and subject:'.'<br />', 'wpadminupdatenotice');
+        print '<i>${DOM}</i>&nbsp;The domain name, such as <code>foo.com</code>'.'<br />';
+        print '<i>${VER}</i>&nbsp;The (latest/updated) WordPress version';
+		print '</p>';
     }
 
     /** 
