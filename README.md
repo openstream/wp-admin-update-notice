@@ -1,6 +1,6 @@
 # Overview and Setup
 
-This plugin will enable you to customize the email notification that WordPress sends when automatically updating to a new version.
+This plugin will enable you to customize the email notification on success that WordPress sends when automatically updating to a new version.
 
 After uploading and enabling the plugin you will find a new menu item under `Settings / WP AUN Settings`.
 
